@@ -16,11 +16,7 @@ function ThroughDirectory(Directory: string) {
     });
 }
 
-ThroughDirectory(String.raw`C:\Users\olive\OneDrive\Documents\GitHub\uksf2\Agreements`);
-ThroughDirectory(String.raw`C:\Users\olive\OneDrive\Documents\GitHub\uksf2\Airports`);
-ThroughDirectory(String.raw`C:\Users\olive\OneDrive\Documents\GitHub\uksf2\ARTCC`);
-ThroughDirectory(String.raw`C:\Users\olive\OneDrive\Documents\GitHub\uksf2\ATS Routes`);
-ThroughDirectory(String.raw`C:\Users\olive\OneDrive\Documents\GitHub\uksf2\Navaids`);
+ThroughDirectory(process.cwd());
 
 
 console.time("linting");

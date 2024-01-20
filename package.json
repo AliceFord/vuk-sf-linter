@@ -4,7 +4,7 @@
 	"author": "Alice Ford",
 	"publisher": "TechieHelper",
 	"license": "GPL v3",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"categories": [],
 	"engines": {
 		"vscode": "^1.75.0"
