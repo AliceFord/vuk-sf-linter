@@ -1,0 +1,15 @@
+{
+	"name": "vuk-sf-linter",
+	"description": "A language server for the Vastim UK Sector File",
+	"version": "1.0.0",
+	"author": "Alice Ford",
+	"license": "GPL v3",
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.11"
+	},
+	"scripts": {}
+}
