@@ -21,8 +21,7 @@ ThroughDirectory(process.cwd());
 console.time("linting");
 
 for (let file of Files) {
-	console.log(file);
-	let path = file.split("\\")
+	let path = file.split("/");
 	let content = fs.readFileSync(file, "utf8");
 
 	let resultDiagnostics = doParse(path, content, false, undefined);
