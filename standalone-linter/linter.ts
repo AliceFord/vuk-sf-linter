@@ -17,11 +17,11 @@ function ThroughDirectory(Directory: string) {
 }
 
 ThroughDirectory(process.cwd());
-console.log(process.cwd());
 
 console.time("linting");
 
 for (let file of Files) {
+	console.log(file);
 	let path = file.split("\\")
 	let content = fs.readFileSync(file, "utf8");
 
