@@ -20,9 +20,14 @@ ThroughDirectory(process.cwd());
 
 console.time("linting");
 
+let error = false;
+
 for (let file of Files) {
 	let path = file.split("/");
 	let content = fs.readFileSync(file, "utf8");
+
+	// ensure \n line endings instead of crlf
+	content = content.replace(/(?<!\r)\n/g, '\r\n');
 
 	let resultDiagnostics = doParse(path, content, false, undefined);
 
@@ -38,7 +43,10 @@ for (let file of Files) {
 			}
 			console.error(`Line ${line}: \`` + content.substring(diagnostic.range.start.character, diagnostic.range.end.character) + "` -> " + diagnostic.message);
 		}
+		error = true;
 	}
 }
 
 console.timeEnd("linting");
+
+if (error) process.exit(1);
