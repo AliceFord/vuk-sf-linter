@@ -18,10 +18,10 @@ function ThroughDirectory(Directory: string) {
 
 ThroughDirectory(process.cwd());
 
-
 console.time("linting");
 
 for (let file of Files) {
+	console.log(file);
 	let path = file.split("\\")
 	let content = fs.readFileSync(file, "utf8");
 
@@ -37,9 +37,10 @@ for (let file of Files) {
 					line++;
 				}
 			}
-			console.log(`Line ${line}: \`` + content.substring(diagnostic.range.start.character, diagnostic.range.end.character) + "` -> " + diagnostic.message);
+			console.error(`Line ${line}: \`` + content.substring(diagnostic.range.start.character, diagnostic.range.end.character) + "` -> " + diagnostic.message);
 		}
 	}
+	break;
 }
 
 console.timeEnd("linting");
