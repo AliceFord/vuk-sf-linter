@@ -22,11 +22,11 @@ export const lineRequirements = {
 		message: "Invalid fix line"
 	},
 	"Positions.txt": {
-		pattern: new RegExp(String.raw`^[A-Z]+[A-Z0-9_\-]+:.+?:1\d{2}\.\d{3}:[A-Z0-9]{1,4}:[A-Z0-9]+:[A-Z+\-~]+:(?:DEL|PLN|TWR|GND|APP|CTR|ATIS):(?:[A-Z_]+|-):(?:[A-Z_]+|-):(?:\d{4}|-|):(?:\d{4}|-|):(?:(?:${latPattern})|):(?:(?:${lonPattern})|)::$`, 'm'),
+		pattern: new RegExp(String.raw`^[A-Z]+[A-Z0-9_\-]+:.+?:1\d{2}\.\d{3}:[A-Z0-9]{1,4}:[A-Z0-9]+:[A-Z+\-~_]+:(?:DEL|PLN|TWR|GND|APP|CTR|ATIS):(?:[A-Z_]+|-):(?:[A-Z_]+|-):(?:\d{4}|-|):(?:\d{4}|-|)(?::${latPattern}:${lonPattern})*$`, 'm'),
 		message: "Invalid position line"
 	},
 	"Positions_Mentor.txt": {
-		pattern: new RegExp(String.raw`^[A-Z]+[A-Z0-9_\-]+:.+?:199.998:[A-Z0-9]{1,4}:[A-Z0-9]+:[A-Z+\-~_]+:(?:DEL|PLN|TWR|GND|APP|CTR|ATIS):(?:[A-Z_]+|-):(?:[A-Z_]+|-):(?:\d{4}|-|):(?:\d{4}|-|):(?:(?:${latPattern})|):(?:(?:${lonPattern})|)::$`, 'm'),
+		pattern: new RegExp(String.raw`^[A-Z]+[A-Z0-9_\-]+:.+?:199.998:[A-Z0-9]{1,4}:[A-Z0-9]+:[A-Z+\-~_]+:(?:DEL|PLN|TWR|GND|APP|CTR|ATIS):(?:[A-Z_]+|-):(?:[A-Z_]+|-):(?:\d{4}|-|):(?:\d{4}|-|)(?::${latPattern}:${lonPattern})*$`, 'm'),
 		message: "Invalid mentor position line"
 	},
 	"Runway.txt": {
@@ -56,7 +56,7 @@ export const lineRequirements = {
 	},
 
 	"ATS Route": {
-		pattern: new RegExp(String.raw`^([A-Z ]{5}) \1 ([A-Z]{3,5}) {0,2} \2 {0,2}$`, 'm'),
+		pattern: new RegExp(String.raw`^([A-Z0-9 ]{5}) \1 ([A-Z0-9]{3,5}) {0,2} \2 {0,2}$`, 'm'),
 		message: "Invalid ATS Route line"
 	},
 	"ATS Route Heli": {
@@ -81,6 +81,10 @@ export const lineRequirements = {
 	"NDBVOR": {
 		pattern: new RegExp(String.raw`^[A-Z0-9 ]+ [0-9]{3}\.[0-9]{3} ${spaceCoordinatePattern}$`, 'm'),
 		message: "Invalid NDB / VOR line"
+	},
+	"Misc": {
+		pattern: new RegExp(String.raw`^.*[^ ]$`, 'm'),
+		message: "Invalid Misc line"
 	}
 }
 
@@ -125,6 +129,31 @@ export const blockLineRequirements = {
 		{
 			pattern: new RegExp(String.raw`(?:^1[1-3][0-9]\.[0-9]{2}[05]$)|(?:^000\.000$)`, 'm'),
 			message: "Invalid aerodrome frequency"
+		}
+	],
+	"Ownership": [
+		{
+			pattern: new RegExp(String.raw`^SECTOR:.*?:[0-9]+:[0-9]+$`, 'm'),
+			message: "Invalid SECTOR line"
+		},
+		{
+			pattern: new RegExp(String.raw`^OWNER(?::[A-Z0-9]+)+$`, 'm'),
+			message: "Invalid OWNER line"
+		},
+		{
+			pattern: new RegExp(String.raw`^ALTOWNER:Observing .*?(?::[A-Z0-9]+)+$`, 'm'),
+			message: "Invalid ALTOWNER line",
+			optional: true
+		},
+		{
+			pattern: new RegExp(String.raw`^BORDER(?::[A-Za-z0-9_\- ]+)+$`, 'm'),
+			message: "Invalid BORDER line",
+			optional: true
+		},
+		{
+			pattern: new RegExp(String.raw`^GUEST:[A-Z0-9]+:(?:\*|EG[A-Z]{2}):(?:\*|EG[A-Z]{2})$`, 'm'),
+			message: "Invalid GUEST line",
+			optional: true
 		}
 	]
 }

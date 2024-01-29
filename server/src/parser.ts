@@ -15,6 +15,7 @@ import {
 interface DiagnosticData {
 	pattern: RegExp;
 	message: string;
+	optional?: boolean;
 }
 
 export function doParse(path: string[], content: string, vscode: boolean, textDocument: TextDocument | undefined): Diagnostic[] {
@@ -72,6 +73,21 @@ export function doParse(path: string[], content: string, vscode: boolean, textDo
 				path = ["NDBVOR"]
 			}
 		}
+		else if (path[i] == "Misc") {
+			path = ["Misc"]
+			break;
+		}
+		else if (path[i] == "Sectors") {
+			path = ["Misc"]
+			break;
+		}
+		else if (path[i] == "Ownership") {
+			if (path[i+1] == "Alternate" || path[i+1] == "Non-UK" || path[i+1] == "Swanwick%20Mil") {
+				break;  // BAD
+			}
+			path = ["Ownership"]
+			break;
+		}
 	}
 
 	let usefulPath = path.join('/');
@@ -115,6 +131,8 @@ export function doParse(path: string[], content: string, vscode: boolean, textDo
 			const pattern = blockRequirements[blockIndicator].pattern;
 			if (!(m = pattern.exec(line))) {
 				// If in block, try next block indicator. Else, jump to next block and try. Finally throw initial error if no match in second block
+
+				let wasOptional = blockRequirements[blockIndicator].optional;
 				if (blockIndicator < blockRequirements.length - 1) {
 					blockIndicator++;
 				} else if (blockIndicator == blockRequirements.length - 1) {
@@ -123,18 +141,37 @@ export function doParse(path: string[], content: string, vscode: boolean, textDo
 
 				const pattern = blockRequirements[blockIndicator].pattern;
 				if (!(m = pattern.exec(line))) {
-					let prevBlockIndicator = blockIndicator == 0 ?  blockRequirements.length - 1 : blockIndicator - 1;
+					if (wasOptional) {
+						blockIndicator = 0;
+						const pattern = blockRequirements[blockIndicator].pattern;
 
-					const diagnostic: Diagnostic = {
-						severity: DiagnosticSeverity.Warning,
-						range: {
-							start: posAt(offset),
-							end: posAt(offset + line.length)
-						},
-						message: blockRequirements[prevBlockIndicator].message,
-						source: 'VUK SF Linter'
-					};
-					diagnostics.push(diagnostic);
+						if (!(m = pattern.exec(line))) {
+							const diagnostic: Diagnostic = {
+								severity: DiagnosticSeverity.Warning,
+								range: {
+									start: posAt(offset),
+									end: posAt(offset + line.length)
+								},
+								message: blockRequirements[blockIndicator].message,
+								source: 'VUK SF Linter'
+							};
+							diagnostics.push(diagnostic);
+						}
+					} else {
+					
+						let prevBlockIndicator = blockIndicator == 0 ?  blockRequirements.length - 1 : blockIndicator - 1;
+
+						const diagnostic: Diagnostic = {
+							severity: DiagnosticSeverity.Warning,
+							range: {
+								start: posAt(offset),
+								end: posAt(offset + line.length)
+							},
+							message: blockRequirements[prevBlockIndicator].message,
+							source: 'VUK SF Linter'
+						};
+						diagnostics.push(diagnostic);
+					}
 				}
 			}
 			offset += line.length + 2;
